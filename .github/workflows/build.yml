@@ -4,8 +4,8 @@ env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
 # Controls when the action will run. 
-on: 
-  workflow_dispatch: {}
+on:
+  workflow_dispatch: { }
   push:
     branches:
       - main
@@ -25,29 +25,35 @@ jobs:
         unityVersion:
           - 2022.2.0f1
         targetPlatform:
-         - WebGL
+          - WebGL
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3.2.0
-      with:
-        lfs: true
-        clean: false
-        
-#     Cache
-    - uses: actions/cache@v3
-      with:
-        path: Library
-        key: Library
+      - name: Checkout
+        uses: actions/checkout@v3.2.0
+        with:
+          lfs: true
+          clean: false
+      
+      #     Cache
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library
+      
+      # Build
+      - name: Build project
+        uses: game-ci/unity-builder@v2.1.2
+        with:
+          unityVersion: ${{ matrix.unityVersion }}
+          targetPlatform: ${{ matrix.targetPlatform }}
 
-    # Build
-    - name: Build project
-      uses: game-ci/unity-builder@v2.1.2
-      with:
-        unityVersion: ${{ matrix.unityVersion }}
-        targetPlatform: ${{ matrix.targetPlatform }}
-
-    # Output
-    - uses: actions/upload-artifact@v3.1.1
-      with:
-        name: Build-${{ matrix.targetPlatform }}
-        path: build/${{ matrix.targetPlatform }}
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.4.0
+        with:
+          branch: gh-pages
+          folder: build
+      
+      # Output
+      - uses: actions/upload-artifact@v3.1.1
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
