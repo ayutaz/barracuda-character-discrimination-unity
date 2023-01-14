@@ -34,7 +34,7 @@ jobs:
           clean: false
       
       #     Cache
-      - uses: actions/cache@v3
+      - uses: actions/cache@v3.2.3
         with:
           path: Library
           key: Library
