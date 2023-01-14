@@ -35,10 +35,10 @@ jobs:
           clean: true
       
       #     Cache
-      - uses: actions/cache@v3.2.3
-        with:
-          path: Library
-          key: Library
+#       - uses: actions/cache@v3.2.3
+#         with:
+#           path: Library
+#           key: Library
       
       # Build
       - name: Build project
